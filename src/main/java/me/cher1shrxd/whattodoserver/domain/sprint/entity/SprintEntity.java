@@ -5,8 +5,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import me.cher1shrxd.whattodoserver.domain.project.entity.ProjectEntity;
 import me.cher1shrxd.whattodoserver.domain.schedule.entity.ScheduleEntity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -27,7 +29,18 @@ public class SprintEntity {
     @Column(name = "sprint_detail")
     private String detail;
 
+    @Column(name = "sprint_start", nullable = false)
+    private String start;
+
+    @Column(name = "sprint_deadline", nullable = false)
+    private String deadline;
+
     @OneToMany(mappedBy = "sprint", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ScheduleEntity> schedules;
+    private List<ScheduleEntity> schedules = new ArrayList<>();
+
+    @OneToOne
+    @JoinColumn(name = "project_id", referencedColumnName = "id")
+    private ProjectEntity project;
 }
+
 
