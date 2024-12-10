@@ -19,6 +19,18 @@ public enum CustomErrorCode {
     WRONG_PASSWORD(401, "Wrong password"),
     EMAIL_DUPLICATION(409, "Email is already in use"),
 
+    // SPRINT
+    SPRINT_NOT_FOUND(404, "Sprint not found"),
+
+    // WBS
+    WBS_NOT_FOUND(404, "Wbs not found"),
+
+    // PROJECT
+    PROJECT_NOT_FOUND(404, "project not found"),
+
+    // SCHEDULE
+    SCHEDULE_NOT_FOUND(404, "Schedule not found"),
+
     // Global
     METHOD_ARGUMENT_NOT_SUPPORTED(405, "Method argument not supported"),
     NO_HANDLER_FOUND(404, "No handler found")
