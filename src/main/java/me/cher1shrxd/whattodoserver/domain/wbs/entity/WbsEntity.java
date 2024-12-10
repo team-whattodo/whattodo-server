@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import me.cher1shrxd.whattodoserver.domain.project.entity.ProjectEntity;
 import me.cher1shrxd.whattodoserver.domain.schedule.entity.ScheduleEntity;
 
 import java.util.List;
@@ -29,4 +30,9 @@ public class WbsEntity {
 
     @OneToMany(mappedBy = "wbs", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ScheduleEntity> schedules;
+
+    @OneToOne
+    @JoinColumn(name = "project_id", referencedColumnName = "id")
+    private ProjectEntity project;
 }
+

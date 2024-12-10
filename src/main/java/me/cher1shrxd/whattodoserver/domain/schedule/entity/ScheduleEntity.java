@@ -8,6 +8,7 @@ import lombok.experimental.SuperBuilder;
 import me.cher1shrxd.whattodoserver.domain.sprint.entity.SprintEntity;
 import me.cher1shrxd.whattodoserver.domain.wbs.entity.WbsEntity;
 
+
 @Entity
 @Getter
 @Setter
@@ -16,8 +17,8 @@ import me.cher1shrxd.whattodoserver.domain.wbs.entity.WbsEntity;
 @Table(name = "schedules")
 public class ScheduleEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
 
     @Column(name = "schedule_title", nullable = false)
     private String title;
@@ -25,11 +26,11 @@ public class ScheduleEntity {
     @Column(name = "schedule_detail", nullable = false)
     private String detail;
 
-    @Column(name = "branch_sha")
-    private String sha;
+    @Column(name = "branch_name")
+    private String branch;
 
     @Column(name = "is_done", nullable = false)
-    private boolean isDone;
+    private boolean isDone = false;
 
     @Column(name = "schedule_start", nullable = false)
     private String start;

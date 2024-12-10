@@ -5,7 +5,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import me.cher1shrxd.whattodoserver.domain.project.entity.ProjectEntity;
 import me.cher1shrxd.whattodoserver.domain.user.enums.UserRole;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -32,4 +35,7 @@ public class UserEntity {
 
     @Column(nullable = false)
     private UserRole role;
+
+    @ManyToMany(mappedBy = "members")
+    private List<ProjectEntity> projects;
 }
