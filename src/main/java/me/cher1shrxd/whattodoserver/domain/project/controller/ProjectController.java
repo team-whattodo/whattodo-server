@@ -20,14 +20,4 @@ public class ProjectController {
         projectService.makeProject(makeProjectRequest);
     }
 
-    @PostMapping("/{projectId}/sprint")
-    public void addSprint(@RequestBody AddSprintRequest addSprintRequest, @PathVariable String projectId) {
-        projectService.addSprint(addSprintRequest, projectId);
-    }
-
-    @PostMapping("/{projectId}/wbs")
-    public void addWbs(@RequestBody AddWbsRequest addWbsRequest, @PathVariable String projectId) {
-        projectService.addWbs(addWbsRequest, projectId);
-    }
-
 }

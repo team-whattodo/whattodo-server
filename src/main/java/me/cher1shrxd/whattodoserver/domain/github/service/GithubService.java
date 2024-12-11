@@ -2,6 +2,10 @@ package me.cher1shrxd.whattodoserver.domain.github.service;
 
 import lombok.RequiredArgsConstructor;
 import me.cher1shrxd.whattodoserver.domain.github.dto.request.*;
+import me.cher1shrxd.whattodoserver.domain.schedule.entity.ScheduleEntity;
+import me.cher1shrxd.whattodoserver.domain.schedule.repository.ScheduleRepository;
+import me.cher1shrxd.whattodoserver.global.exception.CustomErrorCode;
+import me.cher1shrxd.whattodoserver.global.exception.CustomException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -9,6 +13,8 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class GithubService {
+
+    private final ScheduleRepository scheduleRepository;
 
     public ResponseEntity<String> webhookEvent(
             HttpHeaders headers,
@@ -27,7 +33,13 @@ public class GithubService {
                 String prTitle = pullRequest.title();
                 PullRequestMergedBy mergedBy = pullRequest.merged_by();
 
-                System.out.println("Pull Request '" + prTitle + " (" + ref.label() + ")" + " in " + repo.full_name() + "' was merged by " + mergedBy.login());
+                System.out.println("Pull Request '" + prTitle + " (" + ref.ref() + ")" + " in " + repo.full_name() + "' was merged by " + mergedBy.login());
+
+                ScheduleEntity scheduleEntity = scheduleRepository.findByBranch(repo.full_name()+":"+ref.ref())
+                        .orElseThrow(() -> new CustomException(CustomErrorCode.SCHEDULE_NOT_FOUND));
+
+                scheduleEntity.setDone(true);
+                scheduleRepository.save(scheduleEntity);
 
                 return ResponseEntity.ok("Merge event processed");
             }

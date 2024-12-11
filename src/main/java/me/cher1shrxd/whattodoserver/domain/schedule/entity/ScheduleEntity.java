@@ -26,7 +26,7 @@ public class ScheduleEntity {
     @Column(name = "schedule_detail", nullable = false)
     private String detail;
 
-    @Column(name = "branch_name")
+    @Column(name = "branch_name", unique = true)
     private String branch;
 
     @Column(name = "is_done", nullable = false)
