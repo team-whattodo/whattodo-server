@@ -5,12 +5,10 @@ import me.cher1shrxd.whattodoserver.domain.github.dto.request.*;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 @Service
 @RequiredArgsConstructor
 public class GithubService {
-    RestTemplate restTemplate;
 
     public ResponseEntity<String> webhookEvent(
             HttpHeaders headers,

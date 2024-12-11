@@ -1,9 +1,12 @@
 package me.cher1shrxd.whattodoserver.domain.user.dto.response;
 
 import lombok.*;
+import me.cher1shrxd.whattodoserver.domain.project.entity.ProjectEntity;
 import me.cher1shrxd.whattodoserver.domain.user.entity.UserEntity;
 import me.cher1shrxd.whattodoserver.domain.user.enums.UserRole;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Getter
 @Setter

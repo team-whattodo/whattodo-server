@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.*;
 public class SprintController {
     private final SprintService sprintService;
 
-    @PostMapping
-    public void makeSprint(@RequestBody MakeSprintRequest makeSprintRequest) {
-        sprintService.makeSprint(makeSprintRequest);
+    @PostMapping("/{projectId}")
+    public void makeSprint(@RequestBody MakeSprintRequest makeSprintRequest, @PathVariable String projectId) {
+        sprintService.makeSprint(makeSprintRequest, projectId);
     }
 
-    @PostMapping("/{sprintId}")
+    @PostMapping("/schedule/{sprintId}")
     public void addSchedule(@RequestBody AddScheduleRequest addScheduleRequest, @PathVariable String sprintId) {
         sprintService.addSchedule(addScheduleRequest, sprintId);
     }

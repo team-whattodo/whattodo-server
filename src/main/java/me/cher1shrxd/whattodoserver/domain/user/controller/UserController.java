@@ -3,9 +3,12 @@ package me.cher1shrxd.whattodoserver.domain.user.controller;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import me.cher1shrxd.whattodoserver.domain.user.dto.request.UpdateRequest;
+import me.cher1shrxd.whattodoserver.domain.user.dto.response.ProjectResponse;
 import me.cher1shrxd.whattodoserver.domain.user.dto.response.UserResponse;
 import me.cher1shrxd.whattodoserver.domain.user.service.UserService;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/users")
@@ -17,6 +20,11 @@ public class UserController {
     @GetMapping("/me")
     public UserResponse getMe() {
         return userService.getMe();
+    }
+
+    @GetMapping("/me/projects")
+    public List<ProjectResponse> getMyProjects() {
+        return userService.getMyProjects();
     }
 
     @PatchMapping("/me")

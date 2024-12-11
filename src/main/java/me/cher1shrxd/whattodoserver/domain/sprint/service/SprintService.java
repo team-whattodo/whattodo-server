@@ -1,6 +1,8 @@
 package me.cher1shrxd.whattodoserver.domain.sprint.service;
 
 import lombok.RequiredArgsConstructor;
+import me.cher1shrxd.whattodoserver.domain.project.entity.ProjectEntity;
+import me.cher1shrxd.whattodoserver.domain.project.repository.ProjectRepository;
 import me.cher1shrxd.whattodoserver.domain.schedule.entity.ScheduleEntity;
 import me.cher1shrxd.whattodoserver.domain.schedule.repository.ScheduleRepository;
 import me.cher1shrxd.whattodoserver.domain.sprint.dto.request.AddScheduleRequest;
@@ -18,17 +20,24 @@ import java.util.List;
 public class SprintService {
     private final SprintRepository sprintRepository;
     private final ScheduleRepository scheduleRepository;
+    private final ProjectRepository projectRepository;
 
-    public void makeSprint(MakeSprintRequest makeSprintRequest) {
+    public void makeSprint(MakeSprintRequest makeSprintRequest, String projectId) {
+        ProjectEntity projectEntity = projectRepository.findById(projectId)
+                .orElseThrow(() -> new CustomException(CustomErrorCode.PROJECT_NOT_FOUND));
+
         SprintEntity sprintEntity = SprintEntity.builder()
                 .title(makeSprintRequest.title())
                 .detail(makeSprintRequest.detail())
+                .start(makeSprintRequest.start())
+                .deadline(makeSprintRequest.deadline())
+                .project(projectEntity)
                 .build();
         sprintRepository.save(sprintEntity);
     }
 
     public void addSchedule(AddScheduleRequest addScheduleRequest, String sprintId) {
-        ScheduleEntity scheduleEntity = scheduleRepository.findById(sprintId)
+        ScheduleEntity scheduleEntity = scheduleRepository.findById(addScheduleRequest.scheduleId())
                 .orElseThrow(() -> new CustomException(CustomErrorCode.SCHEDULE_NOT_FOUND));
 
         SprintEntity sprintEntity = sprintRepository.findById(sprintId)
@@ -38,6 +47,7 @@ public class SprintService {
         scheduleEntity.setDeadline(sprintEntity.getDeadline());
         scheduleEntity.setStart(sprintEntity.getStart());
 
+        scheduleRepository.save(scheduleEntity);
         sprintEntity.setSchedules(List.of(scheduleEntity));
         sprintRepository.save(sprintEntity);
     }

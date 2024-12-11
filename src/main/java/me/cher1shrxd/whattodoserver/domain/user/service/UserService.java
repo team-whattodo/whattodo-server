@@ -1,7 +1,9 @@
 package me.cher1shrxd.whattodoserver.domain.user.service;
 
 import lombok.RequiredArgsConstructor;
+import me.cher1shrxd.whattodoserver.domain.project.entity.ProjectEntity;
 import me.cher1shrxd.whattodoserver.domain.user.dto.request.UpdateRequest;
+import me.cher1shrxd.whattodoserver.domain.user.dto.response.ProjectResponse;
 import me.cher1shrxd.whattodoserver.domain.user.dto.response.UserResponse;
 import me.cher1shrxd.whattodoserver.domain.user.entity.UserEntity;
 import me.cher1shrxd.whattodoserver.domain.user.repository.UserRepository;
@@ -10,6 +12,8 @@ import me.cher1shrxd.whattodoserver.global.exception.CustomException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +28,16 @@ public class UserService {
         UserEntity userEntity = userRepository.findByEmail(email).orElseThrow(() -> new CustomException(CustomErrorCode.USER_NOT_FOUND));
 
         return new UserResponse(userEntity.getId(), userEntity.getUsername(), userEntity.getEmail(), userEntity.getNickname(), userEntity.getRole());
+    }
+
+    public List<ProjectResponse> getMyProjects() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        UserEntity userEntity = userRepository.findByEmail(email).orElseThrow(() -> new CustomException(CustomErrorCode.USER_NOT_FOUND));
+        List<ProjectEntity> myProjects = userEntity.getProjects();
+
+        return myProjects.stream().map(ProjectResponse::of).toList();
+
     }
 
     public UserResponse updateMe(UpdateRequest updateRequest) {

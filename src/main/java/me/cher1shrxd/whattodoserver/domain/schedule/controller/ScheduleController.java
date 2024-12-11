@@ -14,10 +14,16 @@ import org.springframework.web.bind.annotation.*;
 public class ScheduleController {
     private final ScheduleService scheduleService;
 
-    @PostMapping
-    public void makeSchedule(@RequestBody MakeScheduleRequest makeScheduleRequest) {
-        scheduleService.makeSchedule(makeScheduleRequest);
+    @PostMapping("/sprint")
+    public void makeScheduleInSprint(@RequestBody MakeScheduleRequest makeScheduleRequest) {
+        scheduleService.makeScheduleInSprint(makeScheduleRequest);
     }
+
+    @PostMapping("/wbs")
+    public void makeScheduleInWbs(@RequestBody MakeScheduleRequest makeScheduleRequest) {
+        scheduleService.makeScheduleInWbs(makeScheduleRequest);
+    }
+
 
     @PostMapping("/{scheduleId}")
     public void registerBranch(@RequestBody RegisterBranchRequest registerBranchRequest, @PathVariable String scheduleId) {

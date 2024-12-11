@@ -7,24 +7,55 @@ import me.cher1shrxd.whattodoserver.domain.schedule.dto.request.RegisterBranchRe
 import me.cher1shrxd.whattodoserver.domain.schedule.entity.ScheduleEntity;
 import me.cher1shrxd.whattodoserver.domain.schedule.repository.ScheduleRepository;
 import me.cher1shrxd.whattodoserver.domain.sprint.entity.SprintEntity;
+import me.cher1shrxd.whattodoserver.domain.sprint.repository.SprintRepository;
+import me.cher1shrxd.whattodoserver.domain.wbs.entity.WbsEntity;
+import me.cher1shrxd.whattodoserver.domain.wbs.repository.WbsRepository;
 import me.cher1shrxd.whattodoserver.global.exception.CustomErrorCode;
 import me.cher1shrxd.whattodoserver.global.exception.CustomException;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.List;
+
 
 @Service
 @RequiredArgsConstructor
 public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
+    private final SprintRepository sprintRepository;
+    private final WbsRepository wbsRepository;
 
-    public void makeSchedule(MakeScheduleRequest makeScheduleRequest) {
+    public void makeScheduleInSprint(MakeScheduleRequest makeScheduleRequest) {
         ScheduleEntity scheduleEntity = ScheduleEntity.builder()
                 .title(makeScheduleRequest.title())
                 .detail(makeScheduleRequest.detail())
+                .start(makeScheduleRequest.start())
+                .deadline(makeScheduleRequest.deadline())
                 .build();
 
         scheduleRepository.save(scheduleEntity);
+
+        SprintEntity sprintEntity = sprintRepository.findById(makeScheduleRequest.parentId())
+                .orElseThrow(() -> new CustomException(CustomErrorCode.SPRINT_NOT_FOUND));
+
+        sprintEntity.setSchedules(List.of(scheduleEntity));
+        sprintRepository.save(sprintEntity);
+    }
+
+    public void makeScheduleInWbs(MakeScheduleRequest makeScheduleRequest) {
+        ScheduleEntity scheduleEntity = ScheduleEntity.builder()
+                .title(makeScheduleRequest.title())
+                .detail(makeScheduleRequest.detail())
+                .start(makeScheduleRequest.start())
+                .deadline(makeScheduleRequest.deadline())
+                .build();
+
+        scheduleRepository.save(scheduleEntity);
+
+        WbsEntity wbsEntity = wbsRepository.findById(makeScheduleRequest.parentId())
+                .orElseThrow(() -> new CustomException(CustomErrorCode.SPRINT_NOT_FOUND));
+
+        wbsEntity.setSchedules(List.of(scheduleEntity));
+        wbsRepository.save(wbsEntity);
     }
 
     public void registerBranch(RegisterBranchRequest registerBranchRequest, String scheduleId) {

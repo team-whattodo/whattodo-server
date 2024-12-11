@@ -26,6 +26,8 @@ public class ProjectService {
 
     public void makeProject(MakeProjectRequest makeProjectRequest) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        String repoName = makeProjectRequest.repository().substring(19);
+        System.out.println(repoName);
 
         UserEntity userEntity = userRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.USER_NOT_FOUND));
@@ -33,7 +35,7 @@ public class ProjectService {
         ProjectEntity projectEntity = ProjectEntity.builder()
                 .title(makeProjectRequest.title())
                 .detail(makeProjectRequest.detail())
-                .repository(makeProjectRequest.repository())
+                .repository(repoName)
                 .members(List.of(userEntity))
                 .build();
 
