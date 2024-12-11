@@ -32,13 +32,12 @@ public class ScheduleService {
                 .deadline(makeScheduleRequest.deadline())
                 .build();
 
-        scheduleRepository.save(scheduleEntity);
-
         SprintEntity sprintEntity = sprintRepository.findById(makeScheduleRequest.parentId())
                 .orElseThrow(() -> new CustomException(CustomErrorCode.SPRINT_NOT_FOUND));
 
-        sprintEntity.setSchedules(List.of(scheduleEntity));
-        sprintRepository.save(sprintEntity);
+        scheduleEntity.setSprint(sprintEntity);
+
+        scheduleRepository.save(scheduleEntity);
     }
 
     public void makeScheduleInWbs(MakeScheduleRequest makeScheduleRequest) {
@@ -49,13 +48,12 @@ public class ScheduleService {
                 .deadline(makeScheduleRequest.deadline())
                 .build();
 
-        scheduleRepository.save(scheduleEntity);
-
         WbsEntity wbsEntity = wbsRepository.findById(makeScheduleRequest.parentId())
                 .orElseThrow(() -> new CustomException(CustomErrorCode.SPRINT_NOT_FOUND));
 
-        wbsEntity.setSchedules(List.of(scheduleEntity));
-        wbsRepository.save(wbsEntity);
+        scheduleEntity.setWbs(wbsEntity);
+
+        scheduleRepository.save(scheduleEntity);
     }
 
     public void registerBranch(RegisterBranchRequest registerBranchRequest, String scheduleId) {
