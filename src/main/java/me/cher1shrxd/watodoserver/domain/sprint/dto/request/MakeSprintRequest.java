@@ -4,6 +4,7 @@ public record MakeSprintRequest(
         String title,
         String detail,
         String start,
-        String deadline
+        String deadline,
+        String parentId
 ) {
 }

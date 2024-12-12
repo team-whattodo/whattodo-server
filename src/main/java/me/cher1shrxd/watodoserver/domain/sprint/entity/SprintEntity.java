@@ -1,12 +1,13 @@
 package me.cher1shrxd.watodoserver.domain.sprint.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import me.cher1shrxd.watodoserver.domain.project.entity.ProjectEntity;
-import me.cher1shrxd.watodoserver.domain.schedule.entity.ScheduleEntity;
+import me.cher1shrxd.watodoserver.domain.task.entity.TaskEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,10 +37,11 @@ public class SprintEntity {
     private String deadline;
 
     @OneToMany(mappedBy = "sprint", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ScheduleEntity> schedules = new ArrayList<>();
+    private List<TaskEntity> tasks = new ArrayList<>();
 
     @OneToOne
     @JoinColumn(name = "project_id", referencedColumnName = "id")
+    @JsonIgnore
     private ProjectEntity project;
 }
 
