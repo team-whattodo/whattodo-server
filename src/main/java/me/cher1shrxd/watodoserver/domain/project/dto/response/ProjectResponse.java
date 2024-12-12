@@ -1,4 +1,4 @@
-package me.cher1shrxd.watodoserver.domain.user.dto.response;
+package me.cher1shrxd.watodoserver.domain.project.dto.response;
 
 import me.cher1shrxd.watodoserver.domain.project.entity.ProjectEntity;
 
