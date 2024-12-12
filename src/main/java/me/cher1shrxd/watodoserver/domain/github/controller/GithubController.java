@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 public class GithubController {
     private final GithubService githubService;
 
-    @PostMapping("/whattodo-webhook")
+    @PostMapping("/watodo-webhook")
     public ResponseEntity<String> webhookEvent(
             @RequestHeader HttpHeaders headers,
             @RequestBody GithubWebhookPayload payload
