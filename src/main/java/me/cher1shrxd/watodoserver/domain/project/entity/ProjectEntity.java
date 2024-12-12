@@ -32,13 +32,8 @@ public class ProjectEntity {
     @Column(name = "connected_repository", nullable = false)
     private String repository;
 
-    @ManyToMany
-    @JoinTable(
-            name = "project_members",
-            joinColumns = @JoinColumn(name = "project_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
-    private List<UserEntity> members = new ArrayList<>();
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProjectMemberEntity> members = new ArrayList<>();
 
     @OneToOne(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     private SprintEntity sprint;

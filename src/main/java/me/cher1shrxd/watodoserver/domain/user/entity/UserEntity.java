@@ -1,13 +1,16 @@
 package me.cher1shrxd.watodoserver.domain.user.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import me.cher1shrxd.watodoserver.domain.project.entity.ProjectEntity;
+import me.cher1shrxd.watodoserver.domain.project.entity.ProjectMemberEntity;
 import me.cher1shrxd.watodoserver.domain.user.enums.UserRole;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -31,11 +34,13 @@ public class UserEntity {
     private String nickname;
 
     @Column(nullable = false)
+    @JsonIgnore
     private String password;
 
     @Column(nullable = false)
     private UserRole role;
 
-    @ManyToMany(mappedBy = "members")
-    private List<ProjectEntity> projects;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<ProjectMemberEntity> projects = new ArrayList<>();
 }
