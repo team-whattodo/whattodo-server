@@ -56,9 +56,9 @@ public class TaskService {
         taskRepository.save(taskEntity);
     }
 
-    public void registerBranch(RegisterBranchRequest registerBranchRequest, String scheduleId) {
-        TaskEntity taskEntity = taskRepository.findById(scheduleId)
-                .orElseThrow(() -> new CustomException(CustomErrorCode.SCHEDULE_NOT_FOUND));
+    public void registerBranch(RegisterBranchRequest registerBranchRequest, String taskId) {
+        TaskEntity taskEntity = taskRepository.findById(taskId)
+                .orElseThrow(() -> new CustomException(CustomErrorCode.TASK_NOT_FOUND));
 
         SprintEntity sprintEntity = taskEntity.getSprint();
         ProjectEntity projectEntity = sprintEntity.getProject();

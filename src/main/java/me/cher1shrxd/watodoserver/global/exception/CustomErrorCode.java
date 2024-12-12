@@ -30,8 +30,8 @@ public enum CustomErrorCode {
     NOT_PROJECT_MEMBER(403, "You're not project member"),
     ALREADY_JOINED_PROJECT(409, "You're already member"),
 
-    // SCHEDULE
-    SCHEDULE_NOT_FOUND(404, "Schedule not found"),
+    // TASK
+    TASK_NOT_FOUND(404, "Task not found"),
 
     // Global
     METHOD_ARGUMENT_NOT_SUPPORTED(405, "Method argument not supported"),

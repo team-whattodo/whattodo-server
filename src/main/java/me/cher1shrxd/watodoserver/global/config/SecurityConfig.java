@@ -48,7 +48,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests((configurer) -> configurer
                         .requestMatchers(HttpMethod.GET, "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/signup", "/auth/login", "/auth/reissue").anonymous()
-                        .requestMatchers(HttpMethod.POST, "/github/whattodo-webhook").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/github/watodo-webhook").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)

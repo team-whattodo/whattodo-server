@@ -36,7 +36,7 @@ public class GithubService {
                 System.out.println("Pull Request '" + prTitle + " (" + ref.ref() + ")" + " in " + repo.full_name() + "' was merged by " + mergedBy.login());
 
                 TaskEntity taskEntity = taskRepository.findByBranch(repo.full_name()+":"+ref.ref())
-                        .orElseThrow(() -> new CustomException(CustomErrorCode.SCHEDULE_NOT_FOUND));
+                        .orElseThrow(() -> new CustomException(CustomErrorCode.TASK_NOT_FOUND));
 
                 taskEntity.setDone(true);
                 taskRepository.save(taskEntity);
