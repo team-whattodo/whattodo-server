@@ -2,8 +2,9 @@ package me.cher1shrxd.watodoserver.domain.user.service;
 
 import lombok.RequiredArgsConstructor;
 import me.cher1shrxd.watodoserver.domain.project.entity.ProjectEntity;
+import me.cher1shrxd.watodoserver.domain.project.entity.ProjectMemberEntity;
 import me.cher1shrxd.watodoserver.domain.user.dto.request.UpdateRequest;
-import me.cher1shrxd.watodoserver.domain.user.dto.response.ProjectResponse;
+import me.cher1shrxd.watodoserver.domain.project.dto.response.ProjectResponse;
 import me.cher1shrxd.watodoserver.domain.user.dto.response.UserResponse;
 import me.cher1shrxd.watodoserver.domain.user.entity.UserEntity;
 import me.cher1shrxd.watodoserver.domain.user.repository.UserRepository;
@@ -34,10 +35,13 @@ public class UserService {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
         UserEntity userEntity = userRepository.findByEmail(email).orElseThrow(() -> new CustomException(CustomErrorCode.USER_NOT_FOUND));
-        List<ProjectEntity> myProjects = userEntity.getProjects();
+        List<ProjectEntity> myProjects = userEntity.getProjects().stream()
+                .map(ProjectMemberEntity::getProject)
+                .toList();
 
-        return myProjects.stream().map(ProjectResponse::of).toList();
-
+        return myProjects.stream()
+                .map(ProjectResponse::of)
+                .toList();
     }
 
     public UserResponse updateMe(UpdateRequest updateRequest) {

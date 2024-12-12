@@ -51,7 +51,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/github/whattodo-webhook").permitAll()
                         .requestMatchers(HttpMethod.GET, "/users/me").authenticated()
                         .requestMatchers(HttpMethod.PATCH, "/users/me").authenticated()
-                        .requestMatchers(HttpMethod.POST, "/sprint", "/project", "/schedule", "/sprint/schedule/", "/project/", "/sprint/").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/sprint", "/project", "/task/sprint", "/project/", "/task/wbs", "/task/", "task/branch/").authenticated()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)

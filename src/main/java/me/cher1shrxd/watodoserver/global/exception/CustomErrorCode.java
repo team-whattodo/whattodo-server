@@ -27,6 +27,8 @@ public enum CustomErrorCode {
 
     // PROJECT
     PROJECT_NOT_FOUND(404, "project not found"),
+    NOT_PROJECT_MEMBER(403, "You're not project member"),
+    ALREADY_JOINED_PROJECT(409, "You're already member"),
 
     // SCHEDULE
     SCHEDULE_NOT_FOUND(404, "Schedule not found"),

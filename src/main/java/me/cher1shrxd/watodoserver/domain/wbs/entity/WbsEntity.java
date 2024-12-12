@@ -1,12 +1,13 @@
 package me.cher1shrxd.watodoserver.domain.wbs.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import me.cher1shrxd.watodoserver.domain.project.entity.ProjectEntity;
-import me.cher1shrxd.watodoserver.domain.schedule.entity.ScheduleEntity;
+import me.cher1shrxd.watodoserver.domain.task.entity.TaskEntity;
 
 import java.util.List;
 
@@ -29,10 +30,11 @@ public class WbsEntity {
     private String detail;
 
     @OneToMany(mappedBy = "wbs", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ScheduleEntity> schedules;
+    private List<TaskEntity> schedules;
 
     @OneToOne
     @JoinColumn(name = "project_id", referencedColumnName = "id")
+    @JsonIgnore
     private ProjectEntity project;
 }
 
