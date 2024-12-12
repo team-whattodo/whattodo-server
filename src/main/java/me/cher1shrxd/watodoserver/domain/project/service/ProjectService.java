@@ -1,10 +1,12 @@
 package me.cher1shrxd.watodoserver.domain.project.service;
 
 import lombok.RequiredArgsConstructor;
+import me.cher1shrxd.watodoserver.domain.project.dto.request.EditProjectRequest;
 import me.cher1shrxd.watodoserver.domain.project.dto.request.MakeProjectRequest;
 import me.cher1shrxd.watodoserver.domain.project.dto.response.ProjectDetailResponse;
 import me.cher1shrxd.watodoserver.domain.project.entity.ProjectEntity;
 import me.cher1shrxd.watodoserver.domain.project.entity.ProjectMemberEntity;
+import me.cher1shrxd.watodoserver.domain.project.repository.ProjectMemberRepository;
 import me.cher1shrxd.watodoserver.domain.project.repository.ProjectRepository;
 import me.cher1shrxd.watodoserver.domain.user.entity.UserEntity;
 import me.cher1shrxd.watodoserver.domain.user.repository.UserRepository;
@@ -21,6 +23,7 @@ import java.util.ArrayList;
 public class ProjectService {
     private final ProjectRepository projectRepository;
     private final UserRepository userRepository;
+    private final ProjectMemberRepository projectMemberRepository;
 
     public void makeProject(MakeProjectRequest makeProjectRequest) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -91,20 +94,57 @@ public class ProjectService {
             throw new CustomException(CustomErrorCode.NOT_PROJECT_MEMBER);
         }
 
-        return new ProjectDetailResponse(
-                projectEntity.getId(),
-                projectEntity.getTitle(),
-                projectEntity.getDetail(),
-                projectEntity.getRepository(),
-                projectEntity.getSprint(),
-                projectEntity.getWbs(),
-                projectEntity.getMembers().stream()
-                        .map(ProjectMemberEntity::getUser)
-                        .toList()
-        );
+        return ProjectDetailResponse.of(projectEntity);
     }
 
     public void deleteProject(String projectId) {
         projectRepository.deleteById(projectId);
     }
+
+    public void leaveProject(String projectId) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        UserEntity userEntity = userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException(CustomErrorCode.USER_NOT_FOUND));
+
+        ProjectEntity projectEntity = projectRepository.findById(projectId)
+                .orElseThrow(() -> new CustomException(CustomErrorCode.PROJECT_NOT_FOUND));
+
+        ProjectMemberEntity projectMember = projectEntity.getMembers().stream()
+                .filter(member -> member.getUser().getId().equals(userEntity.getId()))
+                .findFirst()
+                .orElseThrow(() -> new CustomException(CustomErrorCode.NOT_PROJECT_MEMBER));
+
+        projectEntity.getMembers().remove(projectMember);
+
+        projectMemberRepository.delete(projectMember);
+
+        projectRepository.save(projectEntity);
+    }
+
+    public ProjectDetailResponse editProject(EditProjectRequest editProjectRequest, String projectId) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        UserEntity userEntity = userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException(CustomErrorCode.USER_NOT_FOUND));
+
+        ProjectEntity projectEntity = projectRepository.findById(projectId)
+                .orElseThrow(() -> new CustomException(CustomErrorCode.PROJECT_NOT_FOUND));
+
+        boolean isMember = projectEntity.getMembers().stream()
+                .anyMatch(member -> member.getId().equals(userEntity.getId()));
+
+        if (!isMember) {
+            throw new CustomException(CustomErrorCode.NOT_PROJECT_MEMBER);
+        }
+
+        if (editProjectRequest.title() != null) projectEntity.setTitle(editProjectRequest.title());
+        if (editProjectRequest.detail() != null) projectEntity.setDetail(editProjectRequest.detail());
+        if (editProjectRequest.repository() != null) projectEntity.setRepository(editProjectRequest.repository());
+
+        projectRepository.save(projectEntity);
+
+        return ProjectDetailResponse.of(projectEntity);
+    }
+
 }
