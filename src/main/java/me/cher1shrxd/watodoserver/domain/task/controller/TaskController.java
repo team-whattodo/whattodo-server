@@ -2,10 +2,10 @@ package me.cher1shrxd.watodoserver.domain.task.controller;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import me.cher1shrxd.watodoserver.domain.task.dto.request.MakeTaskInSprintRequest;
-import me.cher1shrxd.watodoserver.domain.task.dto.request.MakeTaskInWbsRequest;
-import me.cher1shrxd.watodoserver.domain.task.dto.request.RegisterBranchRequest;
+import me.cher1shrxd.watodoserver.domain.sprint.dto.response.SprintResponse;
+import me.cher1shrxd.watodoserver.domain.task.dto.request.*;
 import me.cher1shrxd.watodoserver.domain.task.service.TaskService;
+import me.cher1shrxd.watodoserver.domain.wbs.dto.response.WbsResponse;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -29,5 +29,20 @@ public class TaskController {
     @PostMapping("/branch/{taskId}")
     public void registerBranch(@RequestBody RegisterBranchRequest registerBranchRequest, @PathVariable String taskId) {
         taskService.registerBranch(registerBranchRequest, taskId);
+    }
+
+    @DeleteMapping("/{taskId}")
+    public void deleteTask(@PathVariable String taskId) {
+        taskService.deleteTask(taskId);
+    }
+
+    @PatchMapping("/sprint/{taskId}")
+    public SprintResponse editTaskInSprint(@RequestBody EditTaskInSprintRequest editTaskInSprintRequest, @PathVariable String taskId) {
+        return taskService.editTaskInSprint(editTaskInSprintRequest, taskId);
+    }
+
+    @PatchMapping("/task/{taskId}")
+    public WbsResponse editTaskInWbs(@RequestBody EditTaskInWbsRequest editTaskInWbsRequest, @PathVariable String taskId) {
+        return taskService.editTaskInWbs(editTaskInWbsRequest, taskId);
     }
 }
