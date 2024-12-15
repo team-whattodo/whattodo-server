@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import me.cher1shrxd.watodoserver.domain.sprint.dto.response.SprintResponse;
 import me.cher1shrxd.watodoserver.domain.task.dto.request.*;
+import me.cher1shrxd.watodoserver.domain.task.dto.response.TaskResponse;
 import me.cher1shrxd.watodoserver.domain.task.service.TaskService;
 import me.cher1shrxd.watodoserver.domain.wbs.dto.response.WbsResponse;
 import org.springframework.web.bind.annotation.*;
@@ -25,10 +26,9 @@ public class TaskController {
         taskService.makeTaskInWbs(makeTaskInWbsRequest);
     }
 
-
-    @PostMapping("/branch/{taskId}")
-    public void registerBranch(@RequestBody RegisterBranchRequest registerBranchRequest, @PathVariable String taskId) {
-        taskService.registerBranch(registerBranchRequest, taskId);
+    @GetMapping("/{taskId}")
+    public TaskResponse getTaskDetail(@PathVariable String taskId) {
+        return taskService.getTaskDetail(taskId);
     }
 
     @DeleteMapping("/{taskId}")
@@ -41,7 +41,7 @@ public class TaskController {
         return taskService.editTaskInSprint(editTaskInSprintRequest, taskId);
     }
 
-    @PatchMapping("/task/{taskId}")
+    @PatchMapping("/wbs/{taskId}")
     public WbsResponse editTaskInWbs(@RequestBody EditTaskInWbsRequest editTaskInWbsRequest, @PathVariable String taskId) {
         return taskService.editTaskInWbs(editTaskInWbsRequest, taskId);
     }

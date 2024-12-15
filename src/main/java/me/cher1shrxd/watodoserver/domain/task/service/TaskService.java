@@ -50,7 +50,6 @@ public class TaskService {
 
         TaskEntity taskEntity = TaskEntity.builder()
                 .title(makeTaskInSprintRequest.title())
-                .detail(makeTaskInSprintRequest.detail())
                 .build();
 
         taskEntity.setStart(sprintEntity.getStart());
@@ -81,28 +80,12 @@ public class TaskService {
 
         TaskEntity taskEntity = TaskEntity.builder()
                 .title(makeTaskInWbsRequest.title())
-                .detail(makeTaskInWbsRequest.detail())
                 .start(makeTaskInWbsRequest.start())
                 .deadline(makeTaskInWbsRequest.deadline())
                 .build();
 
         taskEntity.setWbs(wbsEntity);
 
-        taskRepository.save(taskEntity);
-    }
-
-    public void registerBranch(RegisterBranchRequest registerBranchRequest, String taskId) {
-        TaskEntity taskEntity = taskRepository.findById(taskId)
-                .orElseThrow(() -> new CustomException(CustomErrorCode.TASK_NOT_FOUND));
-
-        SprintEntity sprintEntity = taskEntity.getSprint();
-        ProjectEntity projectEntity = sprintEntity.getProject();
-
-        String repoName = projectEntity.getRepository();
-        String branchName = registerBranchRequest.branchName();
-
-        taskEntity.setBranch(repoName+":"+branchName);
-        System.out.println(repoName+":"+branchName);
         taskRepository.save(taskEntity);
     }
 
@@ -164,9 +147,11 @@ public class TaskService {
             throw new CustomException(CustomErrorCode.NOT_PROJECT_MEMBER);
         }
 
+        String repoName = projectEntity.getRepository();
+        String branchName = editTaskInSprintRequest.branch();
+
         if(editTaskInSprintRequest.title() != null) taskEntity.setTitle(editTaskInSprintRequest.title());
-        if(editTaskInSprintRequest.detail() != null) taskEntity.setDetail(editTaskInSprintRequest.detail());
-        if(editTaskInSprintRequest.branch() != null) taskEntity.setBranch(editTaskInSprintRequest.branch());
+        if(editTaskInSprintRequest.branch() != null) taskEntity.setBranch(repoName+":"+branchName);
 
         taskRepository.save(taskEntity);
 
@@ -194,12 +179,21 @@ public class TaskService {
             throw new CustomException(CustomErrorCode.NOT_PROJECT_MEMBER);
         }
 
+        String repoName = projectEntity.getRepository();
+        String branchName = editTaskInWbsRequest.branch();
+
         if(editTaskInWbsRequest.title() != null) taskEntity.setTitle(editTaskInWbsRequest.title());
-        if(editTaskInWbsRequest.detail() != null) taskEntity.setDetail(editTaskInWbsRequest.detail());
-        if(editTaskInWbsRequest.branch() != null) taskEntity.setBranch(editTaskInWbsRequest.branch());
+        if(editTaskInWbsRequest.branch() != null) taskEntity.setBranch(repoName+":"+branchName);
 
         taskRepository.save(taskEntity);
 
         return WbsResponse.of(wbsEntity);
+    }
+
+    public TaskResponse getTaskDetail(String taskId) {
+        TaskEntity taskEntity = taskRepository.findById(taskId)
+                .orElseThrow(() -> new CustomException(CustomErrorCode.TASK_NOT_FOUND));
+
+        return TaskResponse.of(taskEntity);
     }
 }
