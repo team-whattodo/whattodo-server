@@ -1,7 +1,7 @@
 spring:
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: create
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
     url: ${DB_URL}

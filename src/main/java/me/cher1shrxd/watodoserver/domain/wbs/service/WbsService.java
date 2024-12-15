@@ -6,7 +6,7 @@ import me.cher1shrxd.watodoserver.domain.project.repository.ProjectRepository;
 import me.cher1shrxd.watodoserver.domain.user.entity.UserEntity;
 import me.cher1shrxd.watodoserver.domain.user.repository.UserRepository;
 import me.cher1shrxd.watodoserver.domain.wbs.dto.request.EditWbsRequest;
-import me.cher1shrxd.watodoserver.domain.wbs.dto.request.MaksWbsRequest;
+import me.cher1shrxd.watodoserver.domain.wbs.dto.request.MakeWbsRequest;
 import me.cher1shrxd.watodoserver.domain.wbs.dto.response.WbsResponse;
 import me.cher1shrxd.watodoserver.domain.wbs.entity.WbsEntity;
 import me.cher1shrxd.watodoserver.domain.wbs.repository.WbsRepository;
@@ -22,13 +22,13 @@ public class WbsService {
     private final ProjectRepository projectRepository;
     private final UserRepository userRepository;
 
-    public void makeWbs(MaksWbsRequest maksWbsRequest) {
+    public void makeWbs(MakeWbsRequest makeWbsRequest) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
         UserEntity userEntity = userRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.USER_NOT_FOUND));
 
-        ProjectEntity projectEntity = projectRepository.findById(maksWbsRequest.parentId())
+        ProjectEntity projectEntity = projectRepository.findById(makeWbsRequest.parentId())
                 .orElseThrow(() -> new CustomException(CustomErrorCode.PROJECT_NOT_FOUND));
 
         boolean isMember = projectEntity.getMembers().stream()
@@ -40,8 +40,8 @@ public class WbsService {
         }
 
         WbsEntity wbsEntity = WbsEntity.builder()
-                .title(maksWbsRequest.title())
-                .detail(maksWbsRequest.detail())
+                .title(makeWbsRequest.title())
+                .detail(makeWbsRequest.detail())
                 .project(projectEntity)
                 .build();
         wbsRepository.save(wbsEntity);
