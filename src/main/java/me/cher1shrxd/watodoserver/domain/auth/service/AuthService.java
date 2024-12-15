@@ -78,7 +78,7 @@ public class AuthService {
         if (!refreshTokenRepository.findByEmail(email).equals(refreshToken))
             throw new CustomException(CustomErrorCode.INVALID_REFRESH_TOKEN);
 
-        if (!userRepository.existsByUsername(email)) throw new CustomException(CustomErrorCode.USER_NOT_FOUND);
+        if (!userRepository.existsByEmail(email)) throw new CustomException(CustomErrorCode.USER_NOT_FOUND);
 
         return jwtProvider.generateToken(email);
     }

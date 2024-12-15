@@ -26,7 +26,7 @@ import java.util.Date;
 
 @Component
 @RequiredArgsConstructor
-public class JwtProvider {
+public class  JwtProvider {
     private final JwtProperties jwtProperties;
     private final UserRepository userRepository;
     private final RefreshTokenRepository refreshTokenRepository;
@@ -68,11 +68,11 @@ public class JwtProvider {
     public Authentication getAuthentication(String token) {
         Claims claims = getClaims(token);
 
-        System.out.println("Parsed JWT Subject (email): " + claims.getSubject());
 
         if (getType(token) != JwtType.ACCESS) {
             throw new CustomException(CustomErrorCode.INVALID_TOKEN_TYPE);
         }
+
 
         UserEntity userEntity = userRepository.findByEmail(claims.getSubject())
                 .orElseThrow(() -> new CustomException(CustomErrorCode.USER_NOT_FOUND));
