@@ -15,6 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -24,24 +25,16 @@ public class UserService {
 
     public UserResponse getMe() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        System.out.println(email);
 
-        UserEntity userEntity = userRepository.findByEmail(email).orElseThrow(() -> new CustomException(CustomErrorCode.USER_NOT_FOUND));
+        UserEntity userEntity = userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException(CustomErrorCode.USER_NOT_FOUND));
 
-        return new UserResponse(userEntity.getId(), userEntity.getUsername(), userEntity.getEmail(), userEntity.getNickname(), userEntity.getRole());
-    }
-
-    public List<ProjectResponse> getMyProjects() {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-
-        UserEntity userEntity = userRepository.findByEmail(email).orElseThrow(() -> new CustomException(CustomErrorCode.USER_NOT_FOUND));
-        List<ProjectEntity> myProjects = userEntity.getProjects().stream()
+        List<ProjectResponse> projectResponses = userEntity.getProjects().stream()
                 .map(ProjectMemberEntity::getProject)
-                .toList();
-
-        return myProjects.stream()
                 .map(ProjectResponse::of)
-                .toList();
+                .collect(Collectors.toList());
+
+        return UserResponse.from(userEntity, projectResponses);
     }
 
     public UserResponse updateMe(UpdateRequest updateRequest) {
@@ -61,8 +54,12 @@ public class UserService {
         }
 
         userRepository.save(userEntity);
-        System.out.println(userEntity);
 
-        return new UserResponse(userEntity.getId(), userEntity.getUsername(), userEntity.getEmail(),userEntity.getNickname(), userEntity.getRole());
+        List<ProjectResponse> projectResponses = userEntity.getProjects().stream()
+                .map(ProjectMemberEntity::getProject)
+                .map(ProjectResponse::of)
+                .collect(Collectors.toList());
+
+        return UserResponse.from(userEntity, projectResponses);
     }
 }

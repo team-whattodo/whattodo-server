@@ -62,7 +62,8 @@ public class ProjectService {
                 .orElseThrow(() -> new CustomException(CustomErrorCode.PROJECT_NOT_FOUND));
 
         boolean isMember = projectEntity.getMembers().stream()
-                .anyMatch(member -> member.getId().equals(userEntity.getId()));
+                .anyMatch(member -> member.getUser().getId().equals(userEntity.getId()));
+
 
         if(isMember){
             throw new CustomException(CustomErrorCode.ALREADY_JOINED_PROJECT);
@@ -88,7 +89,9 @@ public class ProjectService {
                 .orElseThrow(() -> new CustomException(CustomErrorCode.PROJECT_NOT_FOUND));
 
         boolean isMember = projectEntity.getMembers().stream()
-                .anyMatch(member -> member.getId().equals(userEntity.getId()));
+                .anyMatch(member -> member.getUser().getId().equals(userEntity.getId()));
+
+
 
         if (!isMember) {
             throw new CustomException(CustomErrorCode.NOT_PROJECT_MEMBER);
@@ -132,7 +135,8 @@ public class ProjectService {
                 .orElseThrow(() -> new CustomException(CustomErrorCode.PROJECT_NOT_FOUND));
 
         boolean isMember = projectEntity.getMembers().stream()
-                .anyMatch(member -> member.getId().equals(userEntity.getId()));
+                .anyMatch(member -> member.getUser().getId().equals(userEntity.getId()));
+
 
         if (!isMember) {
             throw new CustomException(CustomErrorCode.NOT_PROJECT_MEMBER);
@@ -140,7 +144,7 @@ public class ProjectService {
 
         if (editProjectRequest.title() != null) projectEntity.setTitle(editProjectRequest.title());
         if (editProjectRequest.detail() != null) projectEntity.setDetail(editProjectRequest.detail());
-        if (editProjectRequest.repository() != null) projectEntity.setRepository(editProjectRequest.repository());
+        if (editProjectRequest.repository() != null) projectEntity.setRepository(editProjectRequest.repository().substring(19));
 
         projectRepository.save(projectEntity);
 

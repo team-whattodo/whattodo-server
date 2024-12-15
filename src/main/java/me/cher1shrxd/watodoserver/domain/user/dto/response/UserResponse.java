@@ -1,9 +1,12 @@
 package me.cher1shrxd.watodoserver.domain.user.dto.response;
 
 import lombok.*;
+import me.cher1shrxd.watodoserver.domain.project.dto.response.ProjectResponse;
 import me.cher1shrxd.watodoserver.domain.user.entity.UserEntity;
 import me.cher1shrxd.watodoserver.domain.user.enums.UserRole;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -17,13 +20,16 @@ public class UserResponse {
     private String email;
     private String nickname;
     private UserRole role;
+    private List<ProjectResponse> projects;
 
-    public UserResponse toUser(UserEntity userEntity){
+    public static UserResponse from(UserEntity userEntity, List<ProjectResponse> projects) {
         return UserResponse.builder()
-                .email(userEntity.getEmail())
+                .id(userEntity.getId())
                 .username(userEntity.getUsername())
-                .role(userEntity.getRole())
+                .email(userEntity.getEmail())
                 .nickname(userEntity.getNickname())
+                .role(userEntity.getRole())
+                .projects(projects)
                 .build();
     }
 }

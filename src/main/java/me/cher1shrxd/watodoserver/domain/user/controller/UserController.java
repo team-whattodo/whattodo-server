@@ -8,7 +8,6 @@ import me.cher1shrxd.watodoserver.domain.user.dto.response.UserResponse;
 import me.cher1shrxd.watodoserver.domain.user.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/users")
@@ -20,11 +19,6 @@ public class UserController {
     @GetMapping("/me")
     public UserResponse getMe() {
         return userService.getMe();
-    }
-
-    @GetMapping("/me/projects")
-    public List<ProjectResponse> getMyProjects() {
-        return userService.getMyProjects();
     }
 
     @PatchMapping("/me")

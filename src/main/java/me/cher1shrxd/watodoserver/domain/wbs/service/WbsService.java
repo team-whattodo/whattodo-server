@@ -3,10 +3,6 @@ package me.cher1shrxd.watodoserver.domain.wbs.service;
 import lombok.RequiredArgsConstructor;
 import me.cher1shrxd.watodoserver.domain.project.entity.ProjectEntity;
 import me.cher1shrxd.watodoserver.domain.project.repository.ProjectRepository;
-import me.cher1shrxd.watodoserver.domain.sprint.dto.request.EditSprintRequest;
-import me.cher1shrxd.watodoserver.domain.sprint.dto.request.MakeSprintRequest;
-import me.cher1shrxd.watodoserver.domain.sprint.dto.response.SprintResponse;
-import me.cher1shrxd.watodoserver.domain.sprint.entity.SprintEntity;
 import me.cher1shrxd.watodoserver.domain.user.entity.UserEntity;
 import me.cher1shrxd.watodoserver.domain.user.repository.UserRepository;
 import me.cher1shrxd.watodoserver.domain.wbs.dto.request.EditWbsRequest;
@@ -36,7 +32,8 @@ public class WbsService {
                 .orElseThrow(() -> new CustomException(CustomErrorCode.PROJECT_NOT_FOUND));
 
         boolean isMember = projectEntity.getMembers().stream()
-                .anyMatch(member -> member.getId().equals(userEntity.getId()));
+                .anyMatch(member -> member.getUser().getId().equals(userEntity.getId()));
+
 
         if(!isMember) {
             throw new CustomException(CustomErrorCode.NOT_PROJECT_MEMBER);
@@ -62,7 +59,8 @@ public class WbsService {
         ProjectEntity projectEntity = wbsEntity.getProject();
 
         boolean isMember = projectEntity.getMembers().stream()
-                .anyMatch(member -> member.getId().equals(userEntity.getId()));
+                .anyMatch(member -> member.getUser().getId().equals(userEntity.getId()));
+
 
         if(!isMember) {
             throw new CustomException(CustomErrorCode.NOT_PROJECT_MEMBER);
@@ -88,7 +86,8 @@ public class WbsService {
         ProjectEntity projectEntity = wbsEntity.getProject();
 
         boolean isMember = projectEntity.getMembers().stream()
-                .anyMatch(member -> member.getId().equals(userEntity.getId()));
+                .anyMatch(member -> member.getUser().getId().equals(userEntity.getId()));
+
 
         if(!isMember) {
             throw new CustomException(CustomErrorCode.NOT_PROJECT_MEMBER);

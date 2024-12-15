@@ -33,7 +33,8 @@ public class SprintService {
                 .orElseThrow(() -> new CustomException(CustomErrorCode.PROJECT_NOT_FOUND));
 
         boolean isMember = projectEntity.getMembers().stream()
-                .anyMatch(member -> member.getId().equals(userEntity.getId()));
+                .anyMatch(member -> member.getUser().getId().equals(userEntity.getId()));
+
 
         if(!isMember) {
             throw new CustomException(CustomErrorCode.NOT_PROJECT_MEMBER);
@@ -61,7 +62,8 @@ public class SprintService {
         ProjectEntity projectEntity = sprintEntity.getProject();
 
         boolean isMember = projectEntity.getMembers().stream()
-                .anyMatch(member -> member.getId().equals(userEntity.getId()));
+                .anyMatch(member -> member.getUser().getId().equals(userEntity.getId()));
+
 
         if(!isMember) {
             throw new CustomException(CustomErrorCode.NOT_PROJECT_MEMBER);
@@ -99,7 +101,8 @@ public class SprintService {
         ProjectEntity projectEntity = sprintEntity.getProject();
 
         boolean isMember = projectEntity.getMembers().stream()
-                .anyMatch(member -> member.getId().equals(userEntity.getId()));
+                .anyMatch(member -> member.getUser().getId().equals(userEntity.getId()));
+
 
         if(!isMember) {
             throw new CustomException(CustomErrorCode.NOT_PROJECT_MEMBER);
