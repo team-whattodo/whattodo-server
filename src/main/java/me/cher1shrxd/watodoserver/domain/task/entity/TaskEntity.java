@@ -24,8 +24,6 @@ public class TaskEntity {
     @Column(name = "task_title", nullable = false)
     private String title;
 
-    @Column(name = "task_detail", nullable = false)
-    private String detail;
 
     @Column(name = "task_branch", unique = true)
     private String branch;
