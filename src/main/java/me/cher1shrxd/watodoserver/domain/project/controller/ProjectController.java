@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import me.cher1shrxd.watodoserver.domain.project.dto.request.EditProjectRequest;
 import me.cher1shrxd.watodoserver.domain.project.dto.request.MakeProjectRequest;
 import me.cher1shrxd.watodoserver.domain.project.dto.response.ProjectDetailResponse;
+import me.cher1shrxd.watodoserver.domain.project.dto.response.ProjectResponse;
 import me.cher1shrxd.watodoserver.domain.project.service.ProjectService;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,8 +17,8 @@ public class ProjectController {
     private final ProjectService projectService;
 
     @PostMapping
-    public void makeProject(@RequestBody MakeProjectRequest makeProjectRequest) {
-        projectService.makeProject(makeProjectRequest);
+    public ProjectResponse makeProject(@RequestBody MakeProjectRequest makeProjectRequest) {
+        return projectService.makeProject(makeProjectRequest);
     }
 
     @PostMapping("/join/{projectId}")

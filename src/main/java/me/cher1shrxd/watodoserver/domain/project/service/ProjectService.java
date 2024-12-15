@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import me.cher1shrxd.watodoserver.domain.project.dto.request.EditProjectRequest;
 import me.cher1shrxd.watodoserver.domain.project.dto.request.MakeProjectRequest;
 import me.cher1shrxd.watodoserver.domain.project.dto.response.ProjectDetailResponse;
+import me.cher1shrxd.watodoserver.domain.project.dto.response.ProjectResponse;
 import me.cher1shrxd.watodoserver.domain.project.entity.ProjectEntity;
 import me.cher1shrxd.watodoserver.domain.project.entity.ProjectMemberEntity;
 import me.cher1shrxd.watodoserver.domain.project.repository.ProjectMemberRepository;
@@ -25,7 +26,7 @@ public class ProjectService {
     private final UserRepository userRepository;
     private final ProjectMemberRepository projectMemberRepository;
 
-    public void makeProject(MakeProjectRequest makeProjectRequest) {
+    public ProjectResponse makeProject(MakeProjectRequest makeProjectRequest) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         String repoName = makeProjectRequest.repository().substring(19);
         System.out.println(repoName);
@@ -50,6 +51,8 @@ public class ProjectService {
         projectEntity.getMembers().add(projectMember);
 
         projectRepository.save(projectEntity);
+
+        return ProjectResponse.of(projectEntity);
     }
 
     public void joinToProject(String projectId) {
