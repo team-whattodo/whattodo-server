@@ -8,4 +8,5 @@ import java.util.Optional;
 
 public interface TaskRepository extends JpaRepository<TaskEntity, String> {
     Optional<TaskEntity> findByBranch(String branchName);
+    boolean existsByBranch(String branchName);
 }

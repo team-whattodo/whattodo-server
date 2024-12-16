@@ -32,6 +32,7 @@ public enum CustomErrorCode {
 
     // TASK
     TASK_NOT_FOUND(404, "Task not found"),
+    BRANCH_ALREADY_CONNECTED(409, "Branch is already connected"),
 
     // Global
     METHOD_ARGUMENT_NOT_SUPPORTED(405, "Method argument not supported"),
