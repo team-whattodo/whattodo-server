@@ -30,7 +30,7 @@ public class WbsEntity {
     private String detail;
 
     @OneToMany(mappedBy = "wbs", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<TaskEntity> tasks;
+    private List<TaskEntity> task;
 
     @OneToOne
     @JoinColumn(name = "project_id", referencedColumnName = "id")

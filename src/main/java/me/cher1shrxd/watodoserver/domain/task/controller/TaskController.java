@@ -17,13 +17,13 @@ public class TaskController {
     private final TaskService taskService;
 
     @PostMapping("/sprint")
-    public void makeTaskInSprint(@RequestBody MakeTaskInSprintRequest makeTaskInSprintRequest) {
-        taskService.makeTaskInSprint(makeTaskInSprintRequest);
+    public SprintResponse makeTaskInSprint(@RequestBody MakeTaskInSprintRequest makeTaskInSprintRequest) {
+        return taskService.makeTaskInSprint(makeTaskInSprintRequest);
     }
 
     @PostMapping("/wbs")
-    public void makeTaskInWbs(@RequestBody MakeTaskInWbsRequest makeTaskInWbsRequest) {
-        taskService.makeTaskInWbs(makeTaskInWbsRequest);
+    public WbsResponse makeTaskInWbs(@RequestBody MakeTaskInWbsRequest makeTaskInWbsRequest) {
+        return taskService.makeTaskInWbs(makeTaskInWbsRequest);
     }
 
     @GetMapping("/{taskId}")

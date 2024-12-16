@@ -16,7 +16,7 @@ public record WbsResponse(
                 wbsEntity.getId(),
                 wbsEntity.getTitle(),
                 wbsEntity.getDetail(),
-                wbsEntity.getTasks()
+                wbsEntity.getTask()
         );
     }
 }

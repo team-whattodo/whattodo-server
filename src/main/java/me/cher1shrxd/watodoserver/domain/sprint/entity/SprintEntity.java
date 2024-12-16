@@ -37,7 +37,7 @@ public class SprintEntity {
     private String deadline;
 
     @OneToMany(mappedBy = "sprint", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<TaskEntity> tasks = new ArrayList<>();
+    private List<TaskEntity> task = new ArrayList<>();
 
     @OneToOne
     @JoinColumn(name = "project_id", referencedColumnName = "id")

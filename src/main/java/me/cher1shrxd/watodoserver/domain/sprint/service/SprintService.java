@@ -78,7 +78,7 @@ public class SprintService {
         if(editSprintRequest.deadline() != null) sprintEntity.setDeadline(editSprintRequest.deadline());
 
         if (!oldStart.equals(sprintEntity.getStart()) || !oldDeadline.equals(sprintEntity.getDeadline())) {
-            sprintEntity.getTasks().forEach(task -> {
+            sprintEntity.getTask().forEach(task -> {
                 task.setStart(sprintEntity.getStart());
                 task.setDeadline(sprintEntity.getDeadline());
             });

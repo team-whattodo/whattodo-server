@@ -20,7 +20,7 @@ public record SprintResponse(
                 sprintEntity.getDetail(),
                 sprintEntity.getStart(),
                 sprintEntity.getDeadline(),
-                sprintEntity.getTasks()
+                sprintEntity.getTask()
         );
     }
 }
