@@ -18,6 +18,7 @@ public enum CustomErrorCode {
     USER_NOT_FOUND(404, "User not found"),
     WRONG_PASSWORD(401, "Wrong password"),
     EMAIL_DUPLICATION(409, "Email is already in use"),
+    PAT_ALREADY_EXIST(409, "PAT is already in use"),
 
     // SPRINT
     SPRINT_NOT_FOUND(404, "Sprint not found"),
@@ -33,6 +34,9 @@ public enum CustomErrorCode {
     // TASK
     TASK_NOT_FOUND(404, "Task not found"),
     BRANCH_ALREADY_CONNECTED(409, "Branch is already connected"),
+
+    //GITHUB
+    CANNOT_GET_BRANCHES(400, "Can not get branches"),
 
     // Global
     METHOD_ARGUMENT_NOT_SUPPORTED(405, "Method argument not supported"),

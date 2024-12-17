@@ -1,6 +1,7 @@
 package me.cher1shrxd.watodoserver.domain.task.service;
 
 import lombok.RequiredArgsConstructor;
+import me.cher1shrxd.watodoserver.domain.github.service.GithubService;
 import me.cher1shrxd.watodoserver.domain.project.entity.ProjectEntity;
 import me.cher1shrxd.watodoserver.domain.sprint.dto.response.SprintResponse;
 import me.cher1shrxd.watodoserver.domain.task.dto.request.*;
@@ -28,6 +29,7 @@ public class TaskService {
     private final SprintRepository sprintRepository;
     private final WbsRepository wbsRepository;
     private final UserRepository userRepository;
+    private final GithubService githubService;
 
     public SprintResponse makeTaskInSprint(MakeTaskInSprintRequest makeTaskInSprintRequest) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -152,7 +154,7 @@ public class TaskService {
         }
 
         String repoName = projectEntity.getRepository();
-        String branchName = editTaskInSprintRequest.branch();
+        String branchName = githubService.getBranch(repoName, editTaskInSprintRequest.branch(), userEntity.getPat());
         String connector = repoName+":"+branchName;
 
         boolean isAlreadyRegistered = taskRepository.existsByBranch(connector);
