@@ -40,6 +40,9 @@ public class UserEntity {
     @Column(nullable = false)
     private UserRole role;
 
+    @Column(nullable = false, unique = true)
+    private String pat;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<ProjectMemberEntity> projects = new ArrayList<>();

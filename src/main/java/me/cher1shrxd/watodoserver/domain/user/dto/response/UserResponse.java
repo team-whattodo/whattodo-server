@@ -20,6 +20,7 @@ public class UserResponse {
     private String email;
     private String nickname;
     private UserRole role;
+    private String pat;
     private List<ProjectResponse> projects;
 
     public static UserResponse from(UserEntity userEntity, List<ProjectResponse> projects) {
@@ -29,6 +30,7 @@ public class UserResponse {
                 .email(userEntity.getEmail())
                 .nickname(userEntity.getNickname())
                 .role(userEntity.getRole())
+                .pat(userEntity.getPat())
                 .projects(projects)
                 .build();
     }

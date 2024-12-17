@@ -36,11 +36,18 @@ public class AuthService {
             throw new CustomException(CustomErrorCode.EMAIL_DUPLICATION);
         }
 
+        boolean isExistPat =  userRepository.existsByPat(signupRequest.pat());
+
+        if (isExistPat) {
+            throw new CustomException(CustomErrorCode.PAT_ALREADY_EXIST);
+        }
+
         UserEntity userEntity = UserEntity.builder()
                 .username(signupRequest.username())
                 .email(signupRequest.email())
                 .password(hashedPassword)
                 .nickname(signupRequest.nickname())
+                .pat(signupRequest.pat())
                 .role(UserRole.USER)
                 .build();
 

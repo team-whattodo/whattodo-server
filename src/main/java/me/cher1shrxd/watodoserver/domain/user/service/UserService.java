@@ -52,6 +52,15 @@ public class UserService {
             String hashedPassword = bCryptPasswordEncoder.encode(updateRequest.password());
             userEntity.setPassword(hashedPassword);
         }
+        if (updateRequest.pat() != null) {
+            boolean isExistPat =  userRepository.existsByPat(updateRequest.pat());
+
+            if (isExistPat) {
+                throw new CustomException(CustomErrorCode.PAT_ALREADY_EXIST);
+            }
+
+            userEntity.setPat(updateRequest.pat());
+        }
 
         userRepository.save(userEntity);
 
