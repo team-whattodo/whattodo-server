@@ -5,6 +5,7 @@ import me.cher1shrxd.watodoserver.domain.github.service.GithubService;
 import me.cher1shrxd.watodoserver.domain.project.entity.ProjectEntity;
 import me.cher1shrxd.watodoserver.domain.sprint.dto.response.SprintResponse;
 import me.cher1shrxd.watodoserver.domain.task.dto.request.*;
+import me.cher1shrxd.watodoserver.domain.task.dto.response.DeleteTaskResponse;
 import me.cher1shrxd.watodoserver.domain.task.dto.response.TaskResponse;
 import me.cher1shrxd.watodoserver.domain.task.entity.TaskEntity;
 import me.cher1shrxd.watodoserver.domain.task.repository.TaskRepository;
@@ -20,6 +21,7 @@ import me.cher1shrxd.watodoserver.global.exception.CustomException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
 
 
 @Service
@@ -50,8 +52,19 @@ public class TaskService {
             throw new CustomException(CustomErrorCode.NOT_PROJECT_MEMBER);
         }
 
+        String repoName = projectEntity.getRepository();
+        String branchName = githubService.getBranch(repoName, makeTaskInSprintRequest.branch(), userEntity.getPat());
+        String connector = repoName+":"+branchName;
+
+        boolean isAlreadyRegistered = taskRepository.existsByBranch(connector);
+
+        if (isAlreadyRegistered) {
+            throw new CustomException(CustomErrorCode.BRANCH_ALREADY_CONNECTED);
+        }
+
         TaskEntity taskEntity = TaskEntity.builder()
                 .title(makeTaskInSprintRequest.title())
+                .branch(connector)
                 .build();
 
         taskEntity.setStart(sprintEntity.getStart());
@@ -82,8 +95,19 @@ public class TaskService {
             throw new CustomException(CustomErrorCode.NOT_PROJECT_MEMBER);
         }
 
+        String repoName = projectEntity.getRepository();
+        String branchName = githubService.getBranch(repoName, makeTaskInWbsRequest.branch(), userEntity.getPat());
+        String connector = repoName+":"+branchName;
+
+        boolean isAlreadyRegistered = taskRepository.existsByBranch(connector);
+
+        if (isAlreadyRegistered) {
+            throw new CustomException(CustomErrorCode.BRANCH_ALREADY_CONNECTED);
+        }
+
         TaskEntity taskEntity = TaskEntity.builder()
                 .title(makeTaskInWbsRequest.title())
+                .branch(connector)
                 .start(makeTaskInWbsRequest.start())
                 .deadline(makeTaskInWbsRequest.deadline())
                 .build();
@@ -95,7 +119,7 @@ public class TaskService {
         return WbsResponse.of(wbsEntity);
     }
 
-    public void deleteTask(String taskId) {
+    public DeleteTaskResponse deleteTask(String taskId) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
         UserEntity userEntity = userRepository.findByEmail(email)
@@ -130,7 +154,11 @@ public class TaskService {
         }
 
         taskRepository.deleteById(taskId);
+
+        return DeleteTaskResponse.of(sprintEntity, wbsEntity);
     }
+
+
 
     public SprintResponse editTaskInSprint(EditTaskInSprintRequest editTaskInSprintRequest, String taskId) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -164,7 +192,7 @@ public class TaskService {
         }
 
         if(editTaskInSprintRequest.title() != null) taskEntity.setTitle(editTaskInSprintRequest.title());
-        if(editTaskInSprintRequest.branch() != null) taskEntity.setBranch(repoName+":"+branchName);
+        if(editTaskInSprintRequest.branch() != null) taskEntity.setBranch(connector);
 
         taskRepository.save(taskEntity);
 
@@ -193,10 +221,21 @@ public class TaskService {
         }
 
         String repoName = projectEntity.getRepository();
-        String branchName = editTaskInWbsRequest.branch();
+        String branchName = githubService.getBranch(repoName, editTaskInWbsRequest.branch(), userEntity.getPat());
+        String connector = repoName+":"+branchName;
 
-        if(editTaskInWbsRequest.title() != null) taskEntity.setTitle(editTaskInWbsRequest.title());
-        if(editTaskInWbsRequest.branch() != null) taskEntity.setBranch(repoName+":"+branchName);
+        String oldBranch = taskEntity.getBranch();
+
+        boolean isAlreadyRegistered = taskRepository.existsByBranch(connector);
+
+        if (isAlreadyRegistered && !Objects.equals(oldBranch, connector)) {
+            throw new CustomException(CustomErrorCode.BRANCH_ALREADY_CONNECTED);
+        }
+
+        if (editTaskInWbsRequest.title() != null) taskEntity.setTitle(editTaskInWbsRequest.title());
+        if (editTaskInWbsRequest.start() != null) taskEntity.setStart(editTaskInWbsRequest.start());
+        if (editTaskInWbsRequest.deadline() != null) taskEntity.setDeadline(editTaskInWbsRequest.deadline());
+        if (editTaskInWbsRequest.branch() != null) taskEntity.setBranch(connector);
 
         taskRepository.save(taskEntity);
 

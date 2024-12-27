@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import me.cher1shrxd.watodoserver.domain.sprint.dto.response.SprintResponse;
 import me.cher1shrxd.watodoserver.domain.task.dto.request.*;
+import me.cher1shrxd.watodoserver.domain.task.dto.response.DeleteTaskResponse;
 import me.cher1shrxd.watodoserver.domain.task.dto.response.TaskResponse;
 import me.cher1shrxd.watodoserver.domain.task.service.TaskService;
 import me.cher1shrxd.watodoserver.domain.wbs.dto.response.WbsResponse;
@@ -32,8 +33,8 @@ public class TaskController {
     }
 
     @DeleteMapping("/{taskId}")
-    public void deleteTask(@PathVariable String taskId) {
-        taskService.deleteTask(taskId);
+    public DeleteTaskResponse deleteTask(@PathVariable String taskId) {
+        return taskService.deleteTask(taskId);
     }
 
     @PatchMapping("/sprint/{taskId}")
