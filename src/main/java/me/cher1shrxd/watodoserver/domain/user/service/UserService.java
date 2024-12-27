@@ -1,9 +1,8 @@
 package me.cher1shrxd.watodoserver.domain.user.service;
 
 import lombok.RequiredArgsConstructor;
-import me.cher1shrxd.watodoserver.domain.project.entity.ProjectEntity;
 import me.cher1shrxd.watodoserver.domain.project.entity.ProjectMemberEntity;
-import me.cher1shrxd.watodoserver.domain.user.dto.request.UpdateRequest;
+import me.cher1shrxd.watodoserver.domain.user.dto.request.UserUpdateRequest;
 import me.cher1shrxd.watodoserver.domain.project.dto.response.ProjectResponse;
 import me.cher1shrxd.watodoserver.domain.user.dto.response.UserResponse;
 import me.cher1shrxd.watodoserver.domain.user.entity.UserEntity;
@@ -37,29 +36,29 @@ public class UserService {
         return UserResponse.from(userEntity, projectResponses);
     }
 
-    public UserResponse updateMe(UpdateRequest updateRequest) {
+    public UserResponse updateMe(UserUpdateRequest userUpdateRequest) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
         UserEntity userEntity = userRepository.findByEmail(email).orElseThrow(() -> new CustomException(CustomErrorCode.USER_NOT_FOUND));
 
-        if(updateRequest.currentPassword() == null || !bCryptPasswordEncoder.matches(updateRequest.currentPassword(), userEntity.getPassword())) {
+        if(userUpdateRequest.currentPassword() == null || !bCryptPasswordEncoder.matches(userUpdateRequest.currentPassword(), userEntity.getPassword())) {
             throw new CustomException(CustomErrorCode.WRONG_PASSWORD);
         }
 
-        if (updateRequest.username() != null) userEntity.setUsername(updateRequest.username());
-        if (updateRequest.nickname() != null) userEntity.setNickname(updateRequest.nickname());
-        if (updateRequest.password() != null) {
-            String hashedPassword = bCryptPasswordEncoder.encode(updateRequest.password());
+        if (userUpdateRequest.username() != null) userEntity.setUsername(userUpdateRequest.username());
+        if (userUpdateRequest.nickname() != null) userEntity.setNickname(userUpdateRequest.nickname());
+        if (userUpdateRequest.password() != null) {
+            String hashedPassword = bCryptPasswordEncoder.encode(userUpdateRequest.password());
             userEntity.setPassword(hashedPassword);
         }
-        if (updateRequest.pat() != null) {
-            boolean isExistPat =  userRepository.existsByPat(updateRequest.pat());
+        if (userUpdateRequest.pat() != null) {
+            boolean isExistPat =  userRepository.existsByPat(userUpdateRequest.pat());
 
             if (isExistPat) {
                 throw new CustomException(CustomErrorCode.PAT_ALREADY_EXIST);
             }
 
-            userEntity.setPat(updateRequest.pat());
+            userEntity.setPat(userUpdateRequest.pat());
         }
 
         userRepository.save(userEntity);

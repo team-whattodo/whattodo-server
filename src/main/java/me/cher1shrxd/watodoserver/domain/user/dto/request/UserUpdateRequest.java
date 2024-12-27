@@ -1,6 +1,6 @@
 package me.cher1shrxd.watodoserver.domain.user.dto.request;
 
-public record UpdateRequest(
+public record UserUpdateRequest(
         String username,
         String nickname,
         String pat,
