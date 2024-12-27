@@ -15,6 +15,11 @@ import org.springframework.web.bind.annotation.*;
 public class SprintController {
     private final SprintService sprintService;
 
+    @GetMapping("/{sprintId}")
+    public SprintResponse getSprint(@PathVariable String sprintId) {
+        return sprintService.getSprint(sprintId);
+    }
+
     @PostMapping
     public void makeSprint(@RequestBody MakeSprintRequest makeSprintRequest) {
         sprintService.makeSprint(makeSprintRequest);
@@ -29,5 +34,4 @@ public class SprintController {
     public SprintResponse editSprint(@RequestBody EditSprintRequest editSprintRequest, @PathVariable String sprintId) {
         return sprintService.editSprint(editSprintRequest, sprintId);
     }
-
 }

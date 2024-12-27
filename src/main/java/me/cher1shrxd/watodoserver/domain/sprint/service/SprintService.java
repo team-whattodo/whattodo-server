@@ -90,18 +90,13 @@ public class SprintService {
     }
 
     public void deleteSprint(String sprintId) {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-
-        UserEntity userEntity = userRepository.findByEmail(email)
-                .orElseThrow(() -> new CustomException(CustomErrorCode.USER_NOT_FOUND));
-
         SprintEntity sprintEntity = sprintRepository.findById(sprintId)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.SPRINT_NOT_FOUND));
 
         ProjectEntity projectEntity = sprintEntity.getProject();
 
         boolean isMember = projectEntity.getMembers().stream()
-                .anyMatch(member -> member.getUser().getId().equals(userEntity.getId()));
+                .anyMatch(member -> member.getUser().getEmail().equals(SecurityContextHolder.getContext().getAuthentication().getName()));
 
 
         if(!isMember) {
@@ -110,4 +105,22 @@ public class SprintService {
 
         sprintRepository.deleteById(sprintId);
     }
+
+    public SprintResponse getSprint(String sprintId) {
+        SprintEntity sprintEntity = sprintRepository.findById(sprintId)
+                .orElseThrow(() -> new CustomException(CustomErrorCode.SPRINT_NOT_FOUND));
+
+        ProjectEntity projectEntity = sprintEntity.getProject();
+
+        boolean isMember = projectEntity.getMembers().stream()
+                .anyMatch(member -> member.getUser().getEmail().equals(SecurityContextHolder.getContext().getAuthentication().getName()));
+
+
+        if(!isMember) {
+            throw new CustomException(CustomErrorCode.NOT_PROJECT_MEMBER);
+        }
+
+        return SprintResponse.of(sprintEntity);
+    }
+
 }

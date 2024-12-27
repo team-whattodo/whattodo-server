@@ -15,6 +15,11 @@ import org.springframework.web.bind.annotation.*;
 public class WbsController {
     private final WbsService wbsService;
 
+    @GetMapping("/{wbsId}")
+    public WbsResponse getWbs(@PathVariable String wbsId) {
+        return wbsService.getWbs(wbsId);
+    }
+
     @PostMapping
     public void makeWbs(@RequestBody MakeWbsRequest makeWbsRequest) {
         wbsService.makeWbs(makeWbsRequest);

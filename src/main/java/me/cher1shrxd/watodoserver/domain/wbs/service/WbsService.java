@@ -95,4 +95,21 @@ public class WbsService {
 
         wbsRepository.deleteById(wbsId);
     }
+
+    public WbsResponse getWbs(String wbsId) {
+        WbsEntity wbsEntity = wbsRepository.findById(wbsId)
+                .orElseThrow(() -> new CustomException(CustomErrorCode.SPRINT_NOT_FOUND));
+
+        ProjectEntity projectEntity = wbsEntity.getProject();
+
+        boolean isMember = projectEntity.getMembers().stream()
+                .anyMatch(member -> member.getUser().getEmail().equals(SecurityContextHolder.getContext().getAuthentication().getName()));
+
+
+        if(!isMember) {
+            throw new CustomException(CustomErrorCode.NOT_PROJECT_MEMBER);
+        }
+
+        return WbsResponse.of(wbsEntity);
+    }
 }
